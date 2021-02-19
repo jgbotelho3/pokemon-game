@@ -39,7 +39,7 @@
           :key="index"
           @click="chooseOption"
           :value="option"
-          class="mt-4 bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 w-4/5 h-16 flex justify-items-center items-center shadow-2xl rounded-md transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-105"
+          class="mt-4 bg-red-400 w-4/5 h-16 flex justify-items-center items-center shadow-2xl rounded-md transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-105 hover:bg-red-500 focus:outline-none focus:border-color-white"
         >
           <span class="mx-auto text-2xl font-bold text-white text-center px-4">
             {{ option }}
@@ -47,6 +47,8 @@
         </button>
       </div>
     </div>
+    <div v-if="isCorrect">
+      </div>
   </main>
 </template>
 
@@ -92,7 +94,7 @@ export default {
 
       if (this.getCorrectOptionPokemonName !== event.target.innerText) {
         console.log("Errouuuuu");
-        // this.startGame();
+        this.startGame();
       } else {
         console.log('Acertouuu')
         this.isCorrect = true
@@ -102,8 +104,6 @@ export default {
     resetOptions() {
       this.$store.dispatch("resetOptions");
     },
-
-    showCorrectPokemon() {},
   },
 };
 </script>
