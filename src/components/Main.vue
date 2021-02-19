@@ -4,19 +4,30 @@
       <div class="w-1/2 h-full py-40 max-w-screen-md">
         <img
           class="w-1/2 mx-auto"
-          src="../assets/logo.png"
+          :src="getCorrectOptionPokemonImage"
           width="200px"
           height="200px"
           alt="Logo Vue JS"
         />
 
         <div
+        v-if="isCorrect"
+          class="bg-green-400 h-20 flex justify-items-center items-center shadow-2xl rounded-md"
+        >
+          <h1
+            class="italic mx-auto text-4xl font-bold text-white text-center px-4"
+          >
+            {{ getCorrectOptionPokemonName }}
+          </h1>
+        </div>
+        <div
+        v-else
           class="bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 h-20 flex justify-items-center items-center shadow-2xl rounded-md"
         >
           <h1
             class="italic mx-auto text-4xl font-bold text-white text-center px-4"
           >
-            Quem é este pokemon????
+            ??????????????????????????
           </h1>
         </div>
       </div>
@@ -24,34 +35,14 @@
         class="w-1/2 h-full py-40 flex flex-col items-center justify-items-center"
       >
         <button
+          v-for="(option, index) in options"
+          :key="index"
+          @click="chooseOption"
+          :value="option"
           class="mt-4 bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 w-4/5 h-16 flex justify-items-center items-center shadow-2xl rounded-md transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-105"
         >
           <span class="mx-auto text-2xl font-bold text-white text-center px-4">
-            Option 1
-          </span>
-        </button>
-
-        <button
-          class="mt-4 bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 w-4/5 h-16 flex justify-items-center items-center shadow-2xl rounded-md transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-105"
-        >
-          <span class="mx-auto text-2xl font-bold text-white text-center px-4">
-            Option 1
-          </span>
-        </button>
-
-        <button
-          class="mt-4 bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 w-4/5 h-16 flex justify-items-center items-center shadow-2xl rounded-md transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-105"
-        >
-          <span class="mx-auto text-2xl font-bold text-white text-center px-4">
-            Option 1
-          </span>
-        </button>
-
-        <button
-          class="mt-4 bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 w-4/5 h-16 flex justify-items-center items-center shadow-2xl rounded-md transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-105"
-        >
-          <span class="mx-auto text-2xl font-bold text-white text-center px-4">
-            {{getPokemons}}
+            {{ option }}
           </span>
         </button>
       </div>
@@ -60,28 +51,59 @@
 </template>
 
 <script>
-import axios from 'axios'
-
 export default {
   name: "Main",
   data() {
     return {
-      pokemons: [],
+      options: [],
+      correctOption: {},
+      isCorrect: false,
     };
   },
-  props: {
-    pokemon: {},
-  },
-  created(){
-    axios.get('https://pokeapi.co/api/v2/pokemon/1')
-    .then(response => {
-      this.$store.dispatch('storePokemon', response.data.name)
-    })
+  created() {
+    this.startGame();
   },
   computed: {
-    getPokemons(){
-      return this.$store.getters.getPokemons
-    }
-  }
+    getOptions() {
+      return this.$store.getters.getOptions;
+    },
+    getCorrectOptionPokemonName() {
+      return this.$store.getters.getCorrectOptionPokemonName;
+    },
+    getCorrectOptionPokemonImage() {
+      return this.$store.getters.getCorrectOptionPokemonImage;
+    },
+  },
+
+  methods: {
+    startGame() {
+      this.resetOptions();
+      this.$store.dispatch("storePokemon");
+      this.$store.dispatch("storeOptions");
+      this.setOptions();
+    },
+
+    setOptions() {
+      this.options = this.getOptions;
+    },
+
+    chooseOption(event) {
+      event.preventDefault();
+
+      if (this.getCorrectOptionPokemonName !== event.target.innerText) {
+        console.log("Errouuuuu");
+        // this.startGame();
+      } else {
+        console.log('Acertouuu')
+        this.isCorrect = true
+      }
+    },
+
+    resetOptions() {
+      this.$store.dispatch("resetOptions");
+    },
+
+    showCorrectPokemon() {},
+  },
 };
 </script>
