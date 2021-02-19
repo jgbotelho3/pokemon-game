@@ -51,7 +51,7 @@
           class="mt-4 bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 w-4/5 h-16 flex justify-items-center items-center shadow-2xl rounded-md transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-105"
         >
           <span class="mx-auto text-2xl font-bold text-white text-center px-4">
-            Option 1
+            {{getPokemons}}
           </span>
         </button>
       </div>
@@ -60,24 +60,28 @@
 </template>
 
 <script>
-import { onMounted } from "vue";
-
+import axios from 'axios'
 
 export default {
   name: "Main",
   data() {
     return {
-      data: {},
+      pokemons: [],
     };
   },
   props: {
     pokemon: {},
   },
-  setup() {
-    onMounted( () => {
-      this.$store.dispatch('storePokemon');
-       console.log(this.$store.state.pokemons);
-    });
+  created(){
+    axios.get('https://pokeapi.co/api/v2/pokemon/1')
+    .then(response => {
+      this.$store.dispatch('storePokemon', response.data.name)
+    })
   },
+  computed: {
+    getPokemons(){
+      return this.$store.getters.getPokemons
+    }
+  }
 };
 </script>
