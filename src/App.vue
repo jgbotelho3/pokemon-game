@@ -3,7 +3,6 @@
     <Nav />
     <Main />
     <div class="relative">
-      <Footer />
     </div>
   </div>
 </template>
@@ -11,13 +10,12 @@
 <script>
 import Nav from "./components/Nav";
 import Main from "./components/Main";
-import Footer from "./components/Footer";
+
 export default {
   name: "App",
   components: {
     Nav,
     Main,
-    Footer,
   },
 };
 </script>
